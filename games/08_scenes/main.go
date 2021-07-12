@@ -24,8 +24,6 @@ type game struct {
 	lastClickAt time.Time
 }
 
-const debouncer = 100 * time.Millisecond
-
 func (g *game) Update() error {
 	s, ok := g.scenes[g.activeScene]
 	if !ok {
