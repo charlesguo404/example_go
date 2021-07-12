@@ -36,8 +36,7 @@ func (g *game) Update() error {
 	dW := sW/2 - w/2
 	dH := sH/2 - h/2
 	s.imgPos = image.Rect(dW, dH, dW+w, dH+h)
-	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) && time.Since(g.lastClickAt) > debouncer {
-		g.lastClickAt = time.Now()
+	if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) && g.isClickValid() {
 		x, y := ebiten.CursorPosition()
 
 		if s.imgPos.Min.X < x && s.imgPos.Min.Y < y && x < s.imgPos.Max.X && y < s.imgPos.Max.Y {
@@ -102,4 +101,13 @@ func (g *game) addScene(key, target string, srcImg []byte, bg color.Color) error
 	g.scenes[key] = s
 
 	return nil
+}
+
+func (g *game) isClickValid() bool {
+	now := time.Now()
+	if now.Sub(g.lastClickAt) > 200*time.Millisecond {
+		g.lastClickAt = now
+		return true
+	}
+	return false
 }
